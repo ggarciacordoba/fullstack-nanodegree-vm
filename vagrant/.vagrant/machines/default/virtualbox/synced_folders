@@ -1,0 +1,1 @@
+{"virtualbox":{"/home/vagrant/webserver":{"guestpath":"/home/vagrant/webserver","hostpath":"/Users/Gonzalo/Documents/Courses/Udacity/fullstack/vagrant/sync_folder","disabled":false,"__vagrantfile":true},"/vagrant":{"guestpath":"/vagrant","hostpath":"/Users/Gonzalo/Documents/Courses/Udacity/fullstack/vagrant","disabled":false,"__vagrantfile":true}}}
