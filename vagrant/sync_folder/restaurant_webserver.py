@@ -53,20 +53,40 @@ class WebServerHandler(BaseHTTPRequestHandler):
             #Obtain the id of the restaurant
             restId = self.path.split("/")[2]
 
-            edit_restaurant = session.query(Restaurant).filter_by(id = restId).first()
+            edit_restaurant = session.query(Restaurant).filter_by(id = restId).one()
 
-            print self.path
-            self.send_response(200)
-            self.send_header('Content-type','text/html')
-            self.end_headers()
+            if edit_restaurant != []:
+                self.send_response(200)
+                self.send_header('Content-type','text/html')
+                self.end_headers()
 
-            output = ""
-            output += "<html><body>"
-            output += "<form method='POST' enctype='multipart/form-data' action='/restaurants/"+str(restId)+"/edit'><h2>Rename "+edit_restaurant.name+"</h2><input name='message' type='text'><input type='submit' value='Submit'></form>"
-            output += "</body></html>"
-            self.wfile.write(output)
-            print output
-            return
+                output = ""
+                output += "<html><body>"
+                output += "<form method='POST' enctype='multipart/form-data' action='/restaurants/"+str(restId)+"/edit'><h2>Rename "+edit_restaurant.name+"</h2><input name='message' type='text'><input type='submit' value='Submit'></form>"
+                output += "</body></html>"
+                self.wfile.write(output)
+                return
+
+        if self.path.endswith("/delete"):
+
+            restId = self.path.split("/")[2]
+
+            edit_restaurant = session.query(Restaurant).filter_by(id = restId).one()
+
+            if edit_restaurant != []:
+                self.send_response(200)
+                self.send_header('Content-type','text/html')
+                self.end_headers()
+
+                output = ""
+                output = "<html><body>"
+                output += "<form method='POST' enctype='multipart/form-data' action='/restaurants/"+str(restId)+"/delete'>"
+                output += "<h2>Are you sure you want to delete "+edit_restaurant.name+"?</h2>"
+                output += "<input type='submit' value='Delete'></form>"
+                self.wfile.write(output)
+                return
+
+
 
         else:
             self.send_error(404, 'File Not Found: %s' % self.path)
@@ -144,6 +164,19 @@ class WebServerHandler(BaseHTTPRequestHandler):
                         output += "</body></html>"
                         self.wfile.write(output)
                         print output
+
+            if self.path.endswith("/delete"):
+                #Obtain the id of the restaurant
+                restId = self.path.split("/")[2]
+
+                session.query(Restaurant).filter_by(id = restId).delete()
+                session.delete()
+
+                self.send_response(302)
+                self.send_header('Content-type','text/html')
+                self.send_header('Location','/restaurants')
+                self.end_headers()
+
 
             else:
                 self.send_error(404, 'File Not Found: %s' % self.path)
